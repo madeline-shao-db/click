@@ -14,7 +14,7 @@
 
 use base64::engine::{general_purpose::STANDARD, Engine};
 use bytes::Bytes;
-use hickory_resolver::{config::*, Resolver};
+use hickory_resolver::Resolver;
 use k8s_openapi::{http, List, ListableResource};
 use reqwest::blocking::Client;
 use reqwest::{Certificate, Identity, Url};
@@ -40,7 +40,7 @@ fn create_custom_dns_mapping(server_url: &str, tls_server_name: &str) -> Option<
     let proxy_host = url.host_str()?;
 
     // Resolve the proxy host to its IP address
-    let resolver = Resolver::new(ResolverConfig::default(), ResolverOpts::default()).ok()?;
+    let resolver = Resolver::from_system_conf().ok()?;
     let response = resolver.lookup_ip(proxy_host).ok()?;
     let proxy_ip = response.iter().next()?;
 
